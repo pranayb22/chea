@@ -43,7 +43,7 @@ return 0;
 }
 
 
->>> compile command - gcc file_info.c -o file_info
+>>>compile command - gcc file_info.c -o file_info
 >>>run - ./file_info <filename>
 --------------------------------------------------------------------------------------------------------------------------------------
 slip3b
@@ -137,7 +137,7 @@ printf("File '%s' is not present in the current directory.\n", argv[i]);
 >>>compile - gcc check_files.c -o check_files
 >>>run - ./check_files file1.txt file2.txt file3.txt
 ----------------------------------------------------------------------------------------------------------------------------------
-slip4b
+slip4b/slip16b
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,6 +210,79 @@ return 0;
 
 >>>compile - gcc signal_handling.c -o signal_handling
 >>>run - ./signal_handling
+================================================================================================================================
+slip5a
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+
+int main() {
+DIR *dir;
+struct dirent *entry;
+int count = 0;
+
+dir = opendir(".");
+if (dir == NULL) {
+printf("Unable to open directory\n");
+return 1;
+}
+while ((entry = readdir(dir)) != NULL) {
+printf("%s\n", entry->d_name);  // Display file name
+count++;
+}
+closedir(dir);
+printf("\nTotal number of files: %d\n", count);
+
+return 0;
+}
+------------------------------------------------------------------------------------------------------------------------------------
+slip5b
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main() {
+int pipe_fd[2];
+pid_t pid;
+char buffer[100];
+
+if (pipe(pipe_fd) == -1) {
+perror("pipe failed");
+exit(1);
+}
+
+pid = fork();
+
+if (pid < 0) {
+perror("fork failed");
+exit(1);
+}
+
+if (pid == 0) {  
+close(pipe_fd[0]);
+
+write(pipe_fd[1], "Hello World", 12);
+write(pipe_fd[1], "Hello SPPU", 11);
+write(pipe_fd[1], "Linux is Funny", 15);
+
+close(pipe_fd[1]);
+exit(0);
+} else {  
+close(pipe_fd[1]);
+
+while (read(pipe_fd[0], buffer, sizeof(buffer)) > 0) {
+printf("%s\n", buffer);
+}
+close(pipe_fd[0]);
+}
+return 0;
+}
+
+
+>>compile - gcc pipe_example.c -o pipe_example
+>>run-./pipe_example
+
+
 =====================================================================================================================================
 slip6a
 #include <stdio.h>
@@ -311,3 +384,258 @@ printf("Total time spent in kernel mode: %.3f seconds\n", total_system_time / 10
 return 0;
 }
 ======================================================================================================================================
+slip12a
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid;
+    int status;
+
+    // Create child process using fork
+pid = fork();
+
+if (pid < 0) {
+        // If fork fails
+        perror("Fork failed");
+        exit(1);
+} else if (pid == 0) {
+        // Child process
+        printf("Child process is running...\n");
+        exit(42);  // Child exits with a status code of 42
+} else {
+        // Parent process
+        // Wait for the child process to terminate and get the exit status
+waitpid(pid, &status, 0);
+
+        // Check if the child terminated normally
+if (WIFEXITED(status)) {
+printf("Child process terminated normally with exit status: %d\n", WEXITSTATUS(status));
+} else {
+            printf("Child process did not terminate normally\n");
+}
+}
+
+return 0;
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+slip12b
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+
+#define MAX_FILES 100
+
+// Function to get the size of a file
+long getFileSize(const char *filename) {
+    struct stat statbuf;
+    if (stat(filename, &statbuf) == -1) {
+        return -1;  // Return -1 if file does not exist or error occurs
+    }
+    return statbuf.st_size;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Usage: %s <file1> <file2> ...\n", argv[0]);
+        return 1;
+    }
+
+    // Simple bubble sort to sort files by their size
+for (int i = 1; i < argc - 1; i++) {
+        for (int j = i + 1; j < argc; j++) {
+            long size1 = getFileSize(argv[i]);
+            long size2 = getFileSize(argv[j]);
+
+if (size1 == -1 || size2 == -1) {
+                printf("Error accessing file: %s\n", size1 == -1 ? argv[i] : argv[j]);
+                continue;
+            }
+
+if (size1 > size2) {
+                // Swap files
+                char *temp = argv[i];
+                argv[i] = argv[j];
+                argv[j] = temp;
+            }
+        }
+    }
+
+// Display sorted file names
+printf("Files sorted by size (ascending order):\n");
+for (int i = 1; i < argc; i++) {
+printf("%s\n", argv[i]);
+}
+
+return 0;
+}
+
+
+>>compile - gcc sort_files_by_size_simple.c -o sort_files_by_size
+>>run - ./sort_files_by_size a.txt b.txt c.txt
+
+===================================================================================================================================
+slip13a
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+
+int main() {
+    pid_t pid;
+    pid = fork();
+
+if (pid < 0) {
+        // If fork fails
+        perror("Fork failed");
+        exit(1);
+    }
+
+if (pid == 0) {
+        // Child process
+        printf("Child process (PID: %d) is running.\n", getpid());
+while (1) {
+            // Simulate work by making the child process run indefinitely
+            printf("Child process is doing some work...\n");
+            sleep(1);
+        }
+} else {
+        // Parent process
+        printf("Parent process (PID: %d) is running.\n", getpid());
+        
+        // Allow the child process to run for 3 seconds
+sleep(3);
+
+        // Suspend the child process using SIGSTOP
+printf("Suspending child process (PID: %d)...\n", pid);
+kill(pid, SIGSTOP);
+
+        // Wait for 3 seconds
+sleep(3);
+
+        // Resume the child process using SIGCONT
+printf("Resuming child process (PID: %d)...\n", pid);
+kill(pid, SIGCONT);
+
+        // Wait for a while before terminating the parent
+sleep(5);
+}
+
+return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------
+slip13b
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+int main(int argc, char *argv[]) {
+    // Check if a string argument is provided
+    if (argc != 2) {
+        printf("Usage: %s <prefix>\n", argv[0]);
+        return 1;
+    }
+
+char *prefix = argv[1];
+struct dirent *entry;
+DIR *dp;
+
+    // Open the current directory
+dp = opendir(".");
+if (dp == NULL) {
+        perror("opendir failed");
+        return 1;
+    }
+
+    // Iterate through all the files in the directory
+printf("Files starting with '%s':\n", prefix);
+while ((entry = readdir(dp)) != NULL) {
+        // Check if the file name starts with the provided prefix
+        if (strncmp(entry->d_name, prefix, strlen(prefix)) == 0) {
+            printf("%s\n", entry->d_name);
+        }
+}
+
+// Close the directory
+closedir(dp);
+return 0;
+}
+
+>>>compile - gcc list_files_by_prefix.c -o list_files_by_prefix
+>>>run - ./list_files_by_prefix foo
+
+=================================================================================================================================
+slip18a
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main() {
+char filename[256];
+printf("Enter the file name to check: ");
+scanf("%s", filename);
+
+if (access(filename, F_OK) == 0) {
+printf("File '%s' exists in the current directory.\n", filename);
+} else {
+printf("File '%s' does not exist in the current directory.\n", filename);
+}
+return 0;
+}
+
+--------------------------------------------------------------------------------------------------------------------------
+slip18b
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main() {
+int pipe_fd[2];
+pid_t pid;
+char buffer[100];
+
+if (pipe(pipe_fd) == -1) {
+perror("pipe failed");
+exit(1);
+}
+
+pid = fork();
+
+if (pid < 0) {
+perror("fork failed");
+exit(1);
+}
+
+if (pid == 0) {  
+close(pipe_fd[0]);
+
+write(pipe_fd[1], "Hello World", 12);
+write(pipe_fd[1], "Hello SPPU", 11);
+write(pipe_fd[1], "Linux is Funny", 15);
+
+close(pipe_fd[1]);
+exit(0);
+} else {  
+close(pipe_fd[1]);
+
+while (read(pipe_fd[0], buffer, sizeof(buffer)) > 0) {
+printf("%s\n", buffer);
+}
+close(pipe_fd[0]);
+}
+return 0;
+}
