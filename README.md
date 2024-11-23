@@ -59,4 +59,22 @@ else:
 ==========================================================================================================================
 slip3a
 
+import string
+
+def remove_punctuation(input_string):
+    # Define the punctuation characters
+    punctuation = string.punctuation
+    # Remove punctuation from the string
+    cleaned_string = ''.join(char for char in input_string if char not in punctuation)
+    return cleaned_string
+
+user_input = input("Enter a string: ")
+result = remove_punctuation(user_input)
+print("String without punctuation:", result)
+
+-------------------------------------------------------------------------------------------------------------------
+slip3b
+
+
+
 
