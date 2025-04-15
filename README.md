@@ -1,377 +1,485 @@
-********************************************************* web techologies *************************************************
+********************************************************* DAA *************************************************
 
-slip9b
+slip11a
 
-db.customers.insertMany([
-  {
-    "customer_id": "C001",
-    "name": "Pranay",
-    "address": "Vishrantwadi, Pune",
-    "loans": [
-      { "loan_id": "L001", "loan_type": "Home Loan", "loan_amount": 120000, "branch_city": "Vishrantwadi" },
-      { "loan_id": "L002", "loan_type": "Car Loan", "loan_amount": 80000, "branch_city": "Pune" }
-    ]
-  },
-  {
-    "customer_id": "C002",
-    "name": "Deepak Bhoine",
-    "address": "Bopkhel, PCMC",
-    "loans": [
-      { "loan_id": "L003", "loan_type": "Education Loan", "loan_amount": 100000, "branch_city": "bhosari" }
-    ]
-  },
-  {
-    "customer_id": "C003",
-    "name": "Aniket kh",
-    "address": "Khadki, Pune",
-    "loans": [
-      { "loan_id": "L004", "loan_type": "Home Loan", "loan_amount": 200000, "branch_city": "Khadki" }
-    ]
-  },
-  {
-    "customer_id": "C004",
-    "name": "Pooja M",
-    "address": "Khadki, Pune",
-    "loans": [
-      { "loan_id": "L005", "loan_type": "Business Loan", "loan_amount": 50000, "branch_city": "Khadki" }
-    ]
-  },
-  {
-    "customer_id": "C005",
-    "name": "Dinesh",
-    "address": "Chinchwad, Pune",
-    "loans": [
-      { "loan_id": "L006", "loan_type": "Personal Loan", "loan_amount": 30000, "branch_city": "Pimpri" }
-    ]
-  },
-  {
-    "customer_id": "C006",
-    "name": "Abhishek Landge",
-    "address": "Lohegaon, Pune",
-    "loans": [
-      { "loan_id": "L007", "loan_type": "Car Loan", "loan_amount": 120000, "branch_city": "Dhanori" }
-    ]
-  },
-  {
-    "customer_id": "C007",
-    "name": "Ravi Verma",
-    "address": "Baner, Pune",
-    "loans": [
-      { "loan_id": "L008", "loan_type": "Home Loan", "loan_amount": 80000, "branch_city": "Pimpri" }
-    ]
-  },
-  {
-    "customer_id": "C008",
-    "name": "Dhananjay Kulkarni",
-    "address": "Wakad, Pune",
-    "loans": [
-      { "loan_id": "L009", "loan_type": "Business Loan", "loan_amount": 400000, "branch_city": "Pimpri" }
-    ]
-  },
-  {
-    "customer_id": "C009",
-    "name": "Minal Jadhav",
-    "address": "Aundh, Pune",
-    "loans": [
-      { "loan_id": "L010", "loan_type": "Education Loan", "loan_amount": 150000, "branch_city": "Pimpri" }
-    ]
-  },
-  {
-    "customer_id": "C010",
-    "name": "Devendra Joshi",
-    "address": "Hadapsar, Pune",
-    "loans": [
-      { "loan_id": "L011", "loan_type": "Personal Loan", "loan_amount": 100000, "branch_city": "Pimpri" }
-    ]
-  }
-]);
+#include <stdio.h>
+#include <stdlib.h>
 
---------------------------
-queries
+#define MAX_VERTICES 100
 
-q1.
+int visited[MAX_VERTICES];
+int adjMatrix[MAX_VERTICES][MAX_VERTICES];
+int vertexCount = 0;
 
-db.customers.find({ "name": { $regex: /^D/ } }, { "name": 1, "_id": 0 });
-
-q2.
-
-db.customers.find({ "loans.branch_city": "Pimpri" }, { "name": 1, "_id": 0 }).sort({ "name": -1 });
-
-q3.
-
-db.customers.aggregate([
-  { $unwind: "$loans" },
-  { $sort: { "loans.loan_amount": -1 } },
-  { $limit: 1 }
-]);
-
-q4.
-
-db.customers.updateOne(
-  { "name": "Mr. Patil", "loans.loan_amount": { $gt: 100000 } },
-  { $set: { "address": "New Address, Pune" } }
-);
-
-----------------------------------------------------------------------------
-slip9a -HTML FORM
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration Form</title>
-</head>
-<body>
-    <h2>Student Registration Form</h2>
-    <form action="" method="">
-        
-        <label for="fullname">Full Name:</label>
-        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required><br><br>
-
-        <label for="fathersname">Father's Name:</label>
-        <input type="text" id="fathersname" name="fathersname" placeholder="Enter your father's name" required><br><br>
-
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required><br><br>
-
-        
-        <label for="mobile">Mobile Number:</label>
-        <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" pattern="[0-9]{10}" required><br><br>
-
-        
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required><br><br>
-
-        
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-        </select><br><br>
-
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" placeholder="Enter your address" required><br><br>
-
-        
-        <label for="course">Select Course:</label>
-        <select id="course" name="course" required>
-            <option value="">Select Course</option>
-            <option value="B.Sc">B.Sc</option>
-            <option value="B.Com">B.Com</option>
-            <option value="B.Tech">B.Tech</option>
-            <option value="MCA">MCA</option>
-            <option value="MBA">MBA</option>
-        </select><br><br>
-
-        
-        <label for="search_college">Search Preferred College:</label>
-        <input type="search" id="search_college" name="search_college" placeholder="Search for a college" required><br><br>
-
-       
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
-
-***************************************************************************
-
-slip10a
-
-=> index.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trasition </title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="box"></div>
-</body>
-</html>
--------------------------------
-=> style.css
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+void addEdge(int u, int v) {
+adjMatrix[u][v] = 1;
+adjMatrix[v][u] = 1;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: red;
+void DFS(int vertex) {
+printf("%d ", vertex);
+visited[vertex] = 1;
+    
+for(int i = 0; i < vertexCount; i++) {
+if(adjMatrix[vertex][i] == 1 && !visited[i]) {
+DFS(i);
+}
+}
 }
 
-.box {
-    width: 100px;
-    height: 100px;
-    background-color: yellow;
-    transition: transform 2s ease, background-color 2s ease 1s; 
+int main() {
+vertexCount = 5;    
+addEdge(0, 1);
+addEdge(0, 2);
+addEdge(1, 3);
+addEdge(2, 4);
+    
+printf("DFS Traversal: ");
+DFS(0);
+    
+return 0;
 }
 
-.box:hover {
-    transform: rotate(180deg);
-    background-color: purple;
+---------------------------------------------------------------------------------------------------------------
+slip11b
+
+#include <stdio.h>
+#include <limits.h>
+#include <stdbool.h>
+
+#define V 6
+
+int minDistance(int dist[], bool sptSet[]) {
+int min = INT_MAX, min_index;
+for (int v = 0; v < V; v++) {
+ if (sptSet[v] == false && dist[v] <= min) {
+ min = dist[v];
+ min_index = v;
+}
+}
+return min_index;
 }
 
------------------------------------------------------------------------------------------------------------------------
-
-slip10b
-
-customers collection
----------------------
-[
-  {
-    "_id": 1,
-    "name": "Pooja Mahendra",
-    "city": "Pune",
-    "purchases": [
-      { "product": "Smartwatch", "purchase_date": "2023-08-15", "amount": 55000 }
-    ]
-  },
-  {
-    "_id": 2,
-    "name": "Pranay Barathe",
-    "city": "Mumbai",
-    "purchases": [
-      { "product": "Laptop", "purchase_date": "2023-08-15", "amount": 45000 }
-    ]
-  },
-  {
-    "_id": 3,
-    "name": "Abhishek Landge",
-    "city": "Pune",
-    "purchases": [
-      { "product": "Smartphone", "purchase_date": "2023-08-16", "amount": 60000 }
-    ]
-  },
-  {
-    "_id": 4,
-    "name": "Aniket kh",
-    "city": "Delhi",
-    "purchases": [
-      { "product": "Tablet", "purchase_date": "2023-08-10", "amount": 20000 }
-    ]
-  },
-  {
-    "_id": 5,
-    "name": "Atharv tekawale",
-    "city": "Bangalore",
-    "purchases": [
-      { "product": "Headphones", "purchase_date": "2023-08-14", "amount": 30000 }
-    ]
-  }
-]
-
-
-
---------------
-products collection
-
-[
-  {
-    "_id": 1,
-    "name": "Smartphone",
-    "brand": "Iphone",
-    "warranty_period": 1,  
-    "rating": 4.5
-  },
-  {
-    "_id": 2,
-    "name": "Laptop",
-    "brand": "Dell",
-    "warranty_period": 2,  
-    "rating": 4.0
-  },
-  {
-    "_id": 3,
-    "name": "Smartwatch",
-    "brand": "Noise",
-    "warranty_period": 1,  
-    "rating": 4.7
-  },
-  {
-    "_id": 4,
-    "name": "Headphones",
-    "brand": "OnePlus Nord 2R",
-    "warranty_period": 1,  
-    "rating": 4.3
-  },
-  {
-    "_id": 5,
-    "name": "Tablet",
-    "brand": "Samsung",
-    "warranty_period": 2,  
-    "rating": 3.8
-  }
-]
-
----------------
-brand collection
-
-[{
-  "_id": 1,
-  "name": "Noise",
-  "rating": 4.6
-},
-{
-  "_id": 2,
-  "name": "iphone",
-  "rating": 3.9
-},
-{
-  "_id": 3,
-  "name": "samsung",
-  "rating": 4.1
+void printSolution(int dist[]) {
+printf("Vertex \t\t Distance from Source\n");
+for (int i = 0; i < V; i++) {
+printf("%d \t\t %d\n", i, dist[i]);
 }
-]
+}
+
+void dijkstra(int graph[V][V], int src) {
+int dist[V];
+bool sptSet[V];
+    
+for (int i = 0; i < V; i++) {
+dist[i] = INT_MAX;
+sptSet[i] = false;
+}
+    
+dist[src] = 0;
+    
+for (int count = 0; count < V - 1; count++) {
+int u = minDistance(dist, sptSet);
+sptSet[u] = true;
+        
+for (int v = 0; v < V; v++) {
+if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX 
+&& dist[u] + graph[u][v] < dist[v]) {
+dist[v] = dist[u] + graph[u][v];
+}
+}
+}
+    
+printSolution(dist);
+}
+
+int main() {
+int graph[V][V] = {
+{0, 4, 0, 0, 0, 0},
+{4, 0, 8, 0, 0, 0},
+{0, 8, 0, 7, 0, 4},
+{0, 0, 7, 0, 9, 14},
+{0, 0, 0, 9, 0, 10},
+{0, 0, 4, 14, 10, 0}
+};
+    
+dijkstra(graph, 0);
+return 0;
+}
+
+******************************************************************************************************************
+
+slip7a
+
+#include <stdio.h>
+#include <limits.h>
+#include <stdbool.h>
+
+#define V 9
+
+int minDistance(int dist[], bool sptSet[]) {
+int min = INT_MAX, min_index;
+for (int v = 0; v < V; v++)
+if (sptSet[v] == false && dist[v] <= min)
+min = dist[v], min_index = v;
+return min_index;
+}
+
+void printSolution(int dist[]) {
+printf("Vertex \t\t Distance from Source\n");
+for (int i = 0; i < V; i++)
+printf("%d \t\t %d\n", i, dist[i]);
+}
+
+void dijkstra(int graph[V][V], int src) {
+int dist[V];
+bool sptSet[V];
+for (int i = 0; i < V; i++)
+dist[i] = INT_MAX, sptSet[i] = false;
+dist[src] = 0;
+for (int count = 0; count < V - 1; count++) {
+int u = minDistance(dist, sptSet);
+sptSet[u] = true;
+for (int v = 0; v < V; v++)
+if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX
+&& dist[u] + graph[u][v] < dist[v])
+dist[v] = dist[u] + graph[u][v];
+}
+printSolution(dist);
+}
+
+int main() {
+int graph[V][V] = { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+{ 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+{ 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+{ 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+{ 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+{ 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+{ 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+{ 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+{ 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+dijkstra(graph, 0);
+return 0;
+}
+
+----------------------------------------------------------------------------------------------------
+slip7b
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 6
+
+int adj[MAX][MAX] = {
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 1, 0, 0},
+{0, 0, 0, 0, 1, 0},
+{1, 1, 0, 0, 0, 0},
+{1, 0, 1, 0, 0, 0}
+};
+
+int topOrder[MAX];
+int idx;
+
+void topologicalSortUtil(int v, int visited[]) {
+visited[v] = 1;
+for (int i = 0; i < MAX; i++) {
+if (adj[v][i] && !visited[i]) {
+topologicalSortUtil(i, visited);
+}
+}
+topOrder[--idx] = v;
+}
+
+void topologicalSort() {
+int visited[MAX] = {0};
+idx = MAX;
+for (int i = 0; i < MAX; i++) {
+if (!visited[i]) {
+topologicalSortUtil(i, visited);
+}
+}
+}
+
+int main() {
+topologicalSort();
+printf("Topological order: ");
+for (int i = 0; i < MAX; i++) {
+printf("%d ", topOrder[i]);
+}
+return 0;
+}
+
+********************************************************************************************************************
+
+slip12a
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <time.h>
+
+#define MAX_VERTICES 100
+
+int adjMatrix[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int vertexCount = 5;
+
+typedef struct {
+int items[MAX_VERTICES];
+int front;
+int rear;
+} Queue;
+
+Queue* createQueue() {
+Queue* q = (Queue*)malloc(sizeof(Queue));
+q->front = -1;
+q->rear = -1;
+return q;
+}
+
+int isEmpty(Queue* q) {
+return q->rear == -1;
+}
+
+void enqueue(Queue* q, int value) {
+if (q->rear == MAX_VERTICES - 1)
+return;
+if (q->front == -1)
+q->front = 0;
+q->rear++;
+q->items[q->rear] = value;
+}
+
+int dequeue(Queue* q) {
+int item;
+if (isEmpty(q)) {
+item = -1;
+} else {
+item = q->items[q->front];
+q->front++;
+if (q->front > q->rear) {
+q->front = q->rear = -1;
+}
+}
+return item;
+}
+
+void addEdge(int u, int v) {
+adjMatrix[u][v] = 1;
+adjMatrix[v][u] = 1;
+}
+
+void BFS(int startVertex) {
+Queue* q = createQueue();
+    
+visited[startVertex] = 1;
+enqueue(q, startVertex);
+    
+while (!isEmpty(q)) {
+int currentVertex = dequeue(q);
+printf("%d ", currentVertex);
+        
+for (int i = 0; i < vertexCount; i++) {
+if (adjMatrix[currentVertex][i] && !visited[i]) {
+visited[i] = 1;
+enqueue(q, i);
+}
+}
+}
+free(q);
+}
+
+int main() {
+addEdge(0, 1);
+addEdge(0, 2);
+addEdge(1, 3);
+addEdge(2, 4);
+    
+clock_t start = clock();
+printf("BFS Traversal: ");
+BFS(0);
+clock_t end = clock();
+    
+double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+printf("\nTime taken: %f seconds\n", time_taken);
+    
+printf("Time Complexity: O(V + E)\n");
+printf("Where V = Number of vertices, E = Number of edges\n");
+    
+return 0;
+}
+
+----------------------------------------------------------------------------------------------------
+slip12b
+
+#include <stdio.h>
+#include <time.h>
+
+void selectionSort(int arr[], int n) {
+for (int i = 0; i < n-1; i++) {
+int min_idx = i;
+for (int j = i+1; j < n; j++) {
+if (arr[j] < arr[min_idx]) {
+min_idx = j;
+}
+}
+int temp = arr[min_idx];
+arr[min_idx] = arr[i];
+arr[i] = temp;
+}
+}
+
+int main() {
+int arr[] = {64, 25, 12, 22, 11};
+int n = sizeof(arr)/sizeof(arr[0]);
+    
+clock_t start = clock();
+selectionSort(arr, n);
+clock_t end = clock();
+    
+printf("Sorted array: ");
+for (int i = 0; i < n; i++) {
+printf("%d ", arr[i]);
+}
+    
+double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+printf("\nTime taken: %f seconds", time_taken);
+printf("\nTime Complexity: O(n²) in all cases");
+    
+return 0;
+}
+*********************************************************************************************************
+slip13a
+
+#include <stdio.h>
+#include <limits.h>
+
+int matrixChainOrder(int p[], int n) {
+int m[n][n];
+int i, j, k, L, q;
+
+for (i = 1; i < n; i++)
+m[i][i] = 0;
+
+for (L = 2; L < n; L++) {
+for (i = 1; i < n - L + 1; i++) {
+j = i + L - 1;
+m[i][j] = INT_MAX;
+for (k = i; k <= j - 1; k++) {
+q = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+if (q < m[i][j])
+m[i][j] = q;
+}
+}
+}
+return m[1][n - 1];
+}
+
+int main() {
+int arr[] = {10, 20, 30, 40, 30};
+int size = sizeof(arr) / sizeof(arr[0]);
+
+printf("Minimum number of multiplications is %d\n", matrixChainOrder(arr, size));
+return 0;
+}
+
+---------------------------------------------------------------------------------------------------------
+slip13b
+
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 100
+
+void optimalBST(int keys[], int freq[], int n) {
+int cost[n][n];
+int root[n][n];
+
+for (int i = 0; i < n; i++) {
+cost[i][i] = freq[i];
+root[i][i] = i;
+}
+
+for (int L = 2; L <= n; L++) {
+for (int i = 0; i <= n - L; i++) {
+int j = i + L - 1;
+cost[i][j] = INT_MAX;
+int sum = 0;
+for (int s = i; s <= j; s++)
+sum += freq[s];
+
+for (int r = i; r <= j; r++) {
+int c = ((r > i) ? cost[i][r-1] : 0) + 
+((r < j) ? cost[r+1][j] : 0) + 
+sum;
+if (c < cost[i][j]) {
+cost[i][j] = c;
+root[i][j] = r;
+}
+}
+}
+}
+
+printf("Optimal BST Cost: %d\n", cost[0][n-1]);
+printf("Root of OBST: %d\n", keys[root[0][n-1]]);
+}
+
+int main() {
+int keys[] = {10, 20, 30, 40};
+int freq[] = {4, 2, 6, 3};
+int n = sizeof(keys)/sizeof(keys[0]);
+
+optimalBST(keys, freq, n);
+
+printf("\nComplexity Analysis:\n");
+printf("Best Case: O(n^2) - When all frequencies are equal\n");
+printf("Worst Case: O(n^3) - General case\n");
+printf("Space Complexity: O(n^2)\n");
+
+return 0;
+}
 
 
---------------
-Queries
+**********************************************************************************************************
+slip14a
 
-q1.
+#include <stdio.h>
+#include <time.h>
 
-db.products.find(
-  { "warranty_period": 1 }, 
-  { "name": 1, "_id": 0 }
-)
+void insertionSort(int arr[], int n) {
+int i, key, j;
+for (i = 1; i < n; i++) {
+key = arr[i];
+j = i - 1;
+while (j >= 0 && arr[j] > key) {
+arr[j + 1] = arr[j];
+j = j - 1;
+}
+arr[j + 1] = key;
+}
+}
 
-q2.
+void printArray(int arr[], int n) {
+for (int i = 0; i < n; i++) {
+printf("%d ", arr[i]);
+}
+printf("\n");
+}
 
-db.customers.find(
-  { "purchases.purchase_date": "2023-08-16" },
-  { "name": 1, "_id": 0 }
-)
-
-q3.
-
-db.brand.find().sort({ "rating": -1 }).limit(1).forEach(function(brand) {
-  db.products.find({ "brand": brand.name }).forEach(function(product) {
-    print(product.name + " - " + brand.name)
-  })
-})
-
-q4.
-
-db.customers.find(
-  { "city": "Pune", "purchases.amount": { $gt: 50000 } },
-  { "name": 1, "_id": 0 }
-)
-
-
-****************************************************************************
-
-
-
-
-
+int main() {
+int arr[] = {12, 11, 13, 5, 6};
+int n = sizeof(arr)/sizeof(arr[0]);
+    
+clock_t start = clock();
+insertionSort(arr, n);
+clock_t end = clock();
+    
+double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    
+printf("Sorted array: ");
+printArray(arr, n);    
+printf("Time taken: %f seconds\n", time_taken);
+return 0;
+}
