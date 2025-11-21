@@ -345,3 +345,197 @@ sportsLuxuryCar.assemble();
 slip 12
 
 Q2. Same as slipno1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+
+
+Slip no :3-18
+
+
+import java.util.Observable;
+import java.util.Observer;
+
+public class WeatherStation {
+
+   
+    static class WeatherData extends Observable {
+        private float temperature;
+        private float humidity;
+        private float pressure;
+
+        public float getTemperature() { return temperature; }
+        public float getHumidity() { return humidity; }
+        public float getPressure() { return pressure; }
+
+        public void measurementsChanged() {
+            setChanged();
+            notifyObservers();
+        }
+
+        public void setMeasurements(float temperature, float humidity, float pressure) {
+            this.temperature = temperature;
+            this.humidity = humidity;
+            this.pressure = pressure;
+            measurementsChanged();
+        }
+    }
+
+   
+    static class CurrentConditionsDisplay implements Observer {
+        private float temperature;
+        private float humidity;
+
+        public CurrentConditionsDisplay(Observable observable) {
+            observable.addObserver(this);
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            if (o instanceof WeatherData) {
+                WeatherData weatherData = (WeatherData) o;
+                this.temperature = weatherData.getTemperature();
+                this.humidity = weatherData.getHumidity();
+                display();
+            }
+        }
+
+        public void display() {
+            System.out.println("Current conditions: " + temperature + "°C and " + humidity + "% humidity");
+        }
+    }
+
+   
+    public static void main(String[] args) {
+        WeatherData weatherData = new WeatherData();
+CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay(weatherData);
+weatherData.setMeasurements(30.5f, 65f, 1013.1f);
+weatherData.setMeasurements(28.0f, 70f, 1009.5f);
+weatherData.setMeasurements(26.5f, 90f, 1007.2f);
+}
+}
+
+
+----------------------------------------------------------------------------------------------------------
+
+Slipno: 4- 19
+
+
+
+abstract class Pizza {
+    String name;
+
+    void prepare() {
+        System.out.println("Preparing " + name);
+    }
+
+    void bake() {
+        System.out.println("Baking " + name);
+    }
+
+    void cut() {
+        System.out.println("Cutting " + name);
+    }
+
+    void box() {
+        System.out.println("Boxing " + name);
+    }
+
+    String getName() {
+        return name;
+    }
+}
+
+class NYStyleCheesePizza extends Pizza {
+    public NYStyleCheesePizza() {
+        name = "NY Style Cheese Pizza";
+    }
+}
+
+class ChicagoStyleCheesePizza extends Pizza {
+    public ChicagoStyleCheesePizza() {
+        name = "Chicago Style Cheese Pizza";
+    }
+
+
+    @Override
+    void cut() {
+        System.out.println("Cutting " + name + " into square slices");
+    }
+}
+
+
+abstract class PizzaStore {
+
+ 
+    protected abstract Pizza createPizza(String type);
+
+    
+    public Pizza orderPizza(String type) {
+        Pizza pizza = createPizza(type);
+
+        if (pizza != null) {
+            pizza.prepare();
+            pizza.bake();
+            pizza.cut();
+            pizza.box();
+        } else {
+            System.out.println("Sorry, we don't have that pizza type.");
+        }
+
+        return pizza;
+    }
+}
+
+
+class NYPizzaStore extends PizzaStore {
+    @Override
+    protected Pizza createPizza(String type) {
+        if (type.equalsIgnoreCase("cheese")) {
+            return new NYStyleCheesePizza();
+        }
+        return null;
+    }
+}
+
+
+class ChicagoPizzaStore extends PizzaStore {
+    @Override
+    protected Pizza createPizza(String type) {
+        if (type.equalsIgnoreCase("cheese")) {
+            return new ChicagoStyleCheesePizza();
+        }
+        return null;
+    }
+}
+
+
+public class FactoryMethodTest {
+    public static void main(String[] args) {
+        PizzaStore nyStore = new NYPizzaStore();
+        PizzaStore chicagoStore = new ChicagoPizzaStore();
+
+        Pizza pizza1 = nyStore.orderPizza("cheese");
+        System.out.println("Ordered a " + pizza1.getName() + "\n");
+
+        Pizza pizza2 = chicagoStore.orderPizza("cheese");
+        System.out.println("Ordered a " + pizza2.getName() + "\n");
+
+        Pizza pizza3 = nyStore.orderPizza("veggie");  // Not available
+    }
+}
