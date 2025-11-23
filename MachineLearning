@@ -1,0 +1,387 @@
+slip1 : 
+Q1.
+
+
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori
+
+transactions = [
+    ['milk', 'bread', 'eggs'],
+    ['milk', 'bread'],
+    ['bread', 'eggs'],
+    ['milk', 'eggs'],
+    ['bread', 'butter']
+]
+
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+result = apriori(df, min_support=0.25, use_colnames=True)
+
+print(result)
+
+
+----------------------------------------------------------------------------------------
+Slip1:
+Q2.
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import LabelEncoder
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+df["species"] = iris.target_names[iris.target]
+
+le = LabelEncoder()
+df["species_num"] = le.fit_transform(df["species"])
+
+print(df.head())
+
+plt.scatter(df["sepal length (cm)"], df["sepal width (cm)"],
+            c=df["species_num"])
+
+plt.xlabel("Sepal Length (cm)")
+plt.ylabel("Sepal Width (cm)")
+plt.title("Scatter Plot of Iris Dataset")
+plt.show()
+
+
+=========================================================================================
+
+Slip2:
+Q1.
+
+---------------------------
+Area,Price
+800,850000
+1000,1050000
+1200,1250000
+1500,1600000
+1800,1900000
+2000,2100000
+-----------------------------
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+data = pd.read_csv("house_price.csv")
+
+print("Dataset:")
+print(data.head())
+
+
+print("\nNull values in dataset:")
+print(data.isnull().sum())
+
+data = data.dropna()
+
+print("\nDataset after removing null values:")
+print(data.head())
+
+X = data[['Area']]    
+y = data['Price']      
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("\nActual Prices:", list(y_test[:5]))
+print("Predicted Prices:", list(y_pred[:5]))
+
+plt.scatter(X, y, label='Actual Data')
+plt.plot(X, model.predict(X), color='red', label='Regression Line')
+plt.xlabel("Area (sq.ft)")
+plt.ylabel("Price")
+plt.title("Simple Linear Regression - House Price Prediction")
+plt.legend()
+plt.show()
+
+
+---------------------------------------------------------------------------------------------
+Slip2:
+Q2.
+
+------------------------------------
+Save this data as Wholesale_customers.csv
+------------------------------------
+
+Fresh,Milk,Grocery,Frozen,Detergents_Paper,Delicassen
+12669,9656,7561,214,2674,1338
+7057,9810,9568,1762,3293,1776
+6353,8808,7684,2405,3516,7844
+13265,1196,4221,6404,507,1788
+22615,5410,7198,3915,1777,5185
+9413,8259,5126,666,1795,545
+---------------------------------------
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import AgglomerativeClustering
+
+df = pd.read_csv('Wholesale_customers.csv')
+
+features = ['Fresh', 'Milk', 'Grocery', 'Frozen', 'Detergents_Paper', 'Delicassen']
+X = df[features]
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+cluster = AgglomerativeClustering(n_clusters=3, metric='euclidean', linkage='ward')
+df['Cluster'] = cluster.fit_predict(X_scaled)
+
+print(df['Cluster'].value_counts())
+
+
+===================================================================================================
+
+Slip4 : 
+
+Q1.
+--------------------
+Save this data as Mall_Customers.csv
+--------------------
+CustomerID,Gender,Age,Annual Income (k$),Spending Score (1-100)
+1,Male,19,15,39
+2,Male,21,15,81
+3,Female,20,16,6
+4,Female,23,16,77
+5,Female,31,17,40
+6,Female,22,17,76
+7,Male,35,18,6
+8,Female,23,18,94
+9,Male,64,19,3
+10,Female,30,19,72
+
+---------------------
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+df = pd.read_csv('Mall_Customers.csv')
+
+# Select features for clustering (e.g., Annual Income and Spending Score)
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+kmeans = KMeans(n_clusters=5, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+
+df['Cluster'] = clusters
+
+plt.figure(figsize=(8, 6))
+plt.scatter(df['Annual Income (k$)'], df['Spending Score (1-100)'], c=df['Cluster'], cmap='viridis', s=50)
+plt.xlabel('Annual Income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.title('K-Means Clustering on Mall Customers')
+plt.show()
+
+-----------------------------------------------------------------------------------------------------
+
+Slip4:
+Q2.
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+data = {
+    'Area': [800, 1000, 1200, 1500, 1800, 2000],
+    'Price': [850000, 1050000, 1250000, 1600000, 1900000, 2100000]
+}
+df = pd.DataFrame(data)
+
+X = df[['Area']]   
+y = df['Price']    
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Actual Prices:", list(y_test))
+print("Predicted Prices:", list(y_pred))
+
+plt.scatter(X, y, color='blue', label='Actual Data')
+plt.plot(X, model.predict(X), color='red', label='Regression Line')
+plt.xlabel('Area (sq.ft)')
+plt.ylabel('Price')
+plt.title('Simple Linear Regression - House Price Prediction')
+plt.legend()
+plt.show()
+
+
+===========================================================================================
+
+Slip5:
+Q1.
+
+-------------------------
+Save this file as FuelConsumption.csv
+-------------------------
+
+Engine_Size,Cylinders,Fuel_Consumption_City,Fuel_Consumption_Hwy,CO2_Emissions
+2.0,4,9.9,7.8,221
+2.4,4,11.3,8.8,255
+3.5,6,13.5,10.6,317
+1.8,4,8.5,6.7,196
+3.0,6,12.4,9.5,282
+4.0,8,15.3,12.1,350
+2.5,4,10.8,8.2,245
+1.5,4,7.8,6.1,180
+2.2,4,10.2,7.7,230
+3.6,6,13.9,11.0,320
+
+--------------------------------
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+
+df = pd.read_csv('FuelConsumption.csv')
+
+
+features = ['Engine_Size', 'Cylinders', 'Fuel_Consumption_City', 'Fuel_Consumption_Hwy']
+X = df[features]
+y = df['CO2_Emissions']
+
+
+print("Null values:\n", df.isnull().sum())
+df = df.dropna()
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+print("R^2 Score:", r2_score(y_test, y_pred))
+
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual CO2 Emissions")
+plt.ylabel("Predicted CO2 Emissions")
+plt.title("Actual vs Predicted CO2 Emissions")
+plt.show()
+
+-------------------------------------------------------------------------------
+Slip5
+Q2.
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+==============================================================================================
+
+Slip18:
+Q1.
+
+from sklearn.datasets import load_diabetes
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+diabetes = load_diabetes()
+X = diabetes.data
+feature_names = diabetes.feature_names
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+
+df = pd.DataFrame(X, columns=feature_names)
+df['Cluster'] = clusters
+
+print(df.head())
+print("\nCluster counts:")
+print(df['Cluster'].value_counts())
+
+-----------------------------------------------------------------------
+Slip18
+Q2.
+
+----------------------------------
+save this file as salary_positions.csv
+---------------------------------
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+
+df = pd.read_csv('salary_positions.csv')
+X = df[['Level']].values  
+y = df['Salary'].values   
+
+poly = PolynomialFeatures(degree=3)
+X_poly = poly.fit_transform(X)
+
+model = LinearRegression()
+model.fit(X_poly, y)
+
+X_fit = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
+X_fit_poly = poly.transform(X_fit)
+y_fit = model.predict(X_fit_poly)
+
+plt.scatter(X, y, color='blue', label='Actual Salary')
+plt.plot(X_fit, y_fit, color='red', label='Polynomial Regression')
+plt.xlabel('Level')
+plt.ylabel('Salary')
+plt.title('Polynomial Linear Regression')
+plt.legend()
+plt.show()
+
+=======================================================================================
+
+Slip22 
+Q1. Predicting house - Slip2(Q1)
+Q2. Apriori -Slip1(Q1)
+
+
