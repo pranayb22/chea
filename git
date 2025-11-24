@@ -1,0 +1,117 @@
+slip1: 
+Q1.
+
+1)mkdir firstproject
+2)cd firstproject
+3)echo public class First { public static void main(String[] args){ System.out.println("Hello From Java"); } } > First.java
+4)git init
+5)git add First.java
+6)git commit -m "Initial commit: Added First.java with simple Java program"
+7)git log --oneline
+
+
+--------for Ubuntu----------
+1)mkdir firstproject
+2)cd firstproject
+3)gedit First.java
+
+            public class First {
+    public static void main(String[] args) {
+        System.out.println("Hello From Java");
+                            }
+                         }
+4)git init
+5)git add First.java
+6)git commit -m "Initial commit: Added First.java with simple Java program"
+7)git log --oneline
+
+----------------------------------------------------------------------------------------------------------
+
+Q2.
+
+--------If maven not installed in Ubuntu then command this------
+STEP 1: Install Maven
+1)sudo apt update
+2)sudo apt install maven -y
+3)mvn -version
+
+STEP 2: Create a Maven Project
+mvn archetype:generate -DgroupId=com.demo -DartifactId=maven-demo -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+
+STEP 3: Go inside the project
+cd maven-demo
+
+
+STEP 4: Edit pom.xml and add a dependency
+or open using nano
+nano pom.xml
+
+      ==Inside <Dependencies>,add==
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.11.0</version>
+</dependency>
+
+STEP 5: Compile the Maven project
+mvn compile
+
+STEP 6: Run packaging (optional)
+mvn package
+
+
+(Optional) STEP 7: Run the Java program
+java -cp target/maven-demo-1.0-SNAPSHOT.jar com.demo.App
+
+
+
+========================================================================================================
+
+Slip5:
+
+
+Q1.
+
+STEP 1: Create a simple project
+1)mkdir bitbucket-demo
+2)cd bitbucket-demo
+3)echo "print('Hello Bitbucket')" > app.py
+
+STEP 2: Initialize Git
+1)git init
+2)git add app.py
+3)git commit -m "Initial commit: added app.py"
+
+Step 3: Add remote (only command, no login needed in exam)
+git remote add origin https://bitbucket.org/<username>/bitbucket-demo.git
+
+Step 4: Push to Bitbucket (command only)
+git branch -M main
+git push -u origin main
+
+Step 5: Create a new branch
+git branch feature
+git checkout feature
+
+Add some change: ->
+
+                      echo print("feature update") >> app.py
+                      git add app.py
+                      git commit -m "Added feature update"
+
+
+Step 6: Merge feature branch into main
+git checkout main
+git merge feature
+
+Step 7: Display chronological commit history
+git log --oneline
+
+--------------------------------------------------------------------------------------------------------
+Q2.
+
+
+
+
