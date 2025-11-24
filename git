@@ -26,7 +26,7 @@ Q1.
 7)git log --oneline
 
 ----------------------------------------------------------------------------------------------------------
-
+Slip1:
 Q2.
 
 --------If maven not installed in Ubuntu then command this------
@@ -71,7 +71,6 @@ java -cp target/maven-demo-1.0-SNAPSHOT.jar com.demo.App
 
 Slip5:
 
-
 Q1.
 
 STEP 1: Create a simple project
@@ -110,6 +109,7 @@ Step 7: Display chronological commit history
 git log --oneline
 
 --------------------------------------------------------------------------------------------------------
+Slip5:
 Q2.
 
 1. Create project
@@ -156,7 +156,7 @@ Slip6
 
 Q1.  -> Slip5(Q2)
 
-Q2. -> Slip(Q1)
+Q2. -> Slip5(Q1)
 
 
 
